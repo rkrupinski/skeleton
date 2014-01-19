@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    .code {
+      display: block;
+      font-family: monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <ul class="test">
+    <li class="foo">foo</li>
+    <li class="bar">bar</li>
+    <li class="baz"><strong>baz</strong></li>
+  </ul>
+  <strong></strong>
+
+  <script>
+    document.write('<script src="skeleton.js?v=' + Date.now() + '"><\/script>');
+  </script>
+  <script class="code">
+    [
+      $('.test'),
+      $('li:nth-child(even)'),
+      $('<div>'),
+      $('strong', document.querySelector('.test')),
+      $(window).get(0),
+      $($(document)).get()
+    ].forEach(function (result) {
+      console.log(result);
+    });
+
+    $('li').each(function (index, element) {
+      console.log(index, element, element === this);
+    });
+
+    $.fn.foo = function (options) {
+      return this.each(function (index, element) {
+        this.style.color = options.color;
+      });
+    };
+
+    $('li').foo({ color: '#f00' });
+  </script>
+</body>
+</html>
+
