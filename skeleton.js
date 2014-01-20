@@ -61,7 +61,7 @@
     switch (true) {
       case (typeof arg === 'string'):
         try {
-          query = context.querySelectorAll(arg); 
+          query = context.querySelectorAll(arg);
         } catch (e) {}
 
         node = utils.parseDOM(arg);
