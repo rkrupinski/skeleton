@@ -91,6 +91,10 @@ var $ = (function () {
         // wrapped
         obj._content = arg.get();
         break;
+      case (Array.isArray(arg)):
+        // array of whatever passed
+        obj._content = arg;
+        break;
       default:
         // neither
         break;
