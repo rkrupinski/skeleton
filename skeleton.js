@@ -1,4 +1,10 @@
-var $ = (function () {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else {
+    root.$ = factory();
+  }
+}(this, function () {
   'use strict';
 
   var utils = {
@@ -114,5 +120,4 @@ var $ = (function () {
 
   return wrapper;
 
-}());
-
+}));
