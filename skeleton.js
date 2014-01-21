@@ -14,7 +14,7 @@
 
       return function (str) {
         container.innerHTML = str;
-        return container.firstElementChild;
+        return container.children;
       };
     }()),
 
@@ -54,7 +54,7 @@
     var obj = Object.create(proto)
       , context = ctx || document
       , query = []
-      , node;
+      , nodes = [];
 
     obj._content = [];
 
@@ -64,16 +64,16 @@
           query = context.querySelectorAll(arg);
         } catch (e) {}
 
-        node = utils.parseDOM(arg);
+        nodes = utils.parseDOM(arg);
 
         switch (true) {
           case (!!query.length):
             // valid selector
             obj._content = utils.toArray(query);
             break;
-          case (!!node):
-            // node found
-            obj._content.push(node);
+          case (!!nodes.length):
+            // element nodes found
+            obj._content = utils.toArray(nodes);
             break;
           default:
             // neither
