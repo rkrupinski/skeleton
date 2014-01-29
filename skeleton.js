@@ -87,12 +87,8 @@
         // nodelist passed
         obj._content = utils.toArray(arg);
         break;
-      case (arg instanceof Element):
-        // element passed
-        obj._content.push(arg);
-        break;
-      case (arg === document || arg === window):
-        // document or window passed
+      case (arg instanceof Element || arg === document || arg === window):
+        // element node, document or window passed
         obj._content.push(arg);
         break;
       case (proto.isPrototypeOf(arg)):
