@@ -73,7 +73,9 @@
             break;
           case (!!nodes.length):
             // element nodes found
-            obj._content = utils.toArray(nodes);
+            utils.toArray(nodes).forEach(function (node) {
+              obj._content.push(node.cloneNode(true));
+            });
             break;
           default:
             // neither
@@ -105,6 +107,9 @@
         // neither
         break;
     }
+
+    query = null;
+    nodes = null;
 
     obj.context = context;
     obj.length = obj._content.length;
