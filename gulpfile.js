@@ -1,5 +1,6 @@
 var gulp = require('gulp')
-  , jshint = require('gulp-jshint');
+  , jshint = require('gulp-jshint')
+  , karma = require('gulp-karma');
 
 gulp.task('jshint', function () {
   gulp.src('./skeleton.js')
@@ -7,6 +8,15 @@ gulp.task('jshint', function () {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('default', function () {
-  gulp.run('jshint');
+gulp.task('karma', function () {
+	gulp.src([
+		'skeleton.js',
+		'test/{,*/}*.js'
+	])
+		.pipe(karma({
+			action: 'run',
+			configFile: 'karma.conf.js'
+		}));
 });
+
+gulp.task('default', ['jshint', 'karma']);

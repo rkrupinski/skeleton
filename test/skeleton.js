@@ -1,0 +1,3 @@
+describe('skeleton.js', function () {
+
+});
