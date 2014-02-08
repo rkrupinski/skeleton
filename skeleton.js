@@ -62,9 +62,9 @@
       case (typeof arg === 'string'):
         try {
           query = context.querySelectorAll(arg);
-        } catch (e) {}
-
-        nodes = utils.parseDOM(arg);
+        } catch (e) {
+          nodes = utils.parseDOM(arg);
+        }
 
         switch (true) {
           case (!!query.length):
