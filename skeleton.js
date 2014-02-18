@@ -9,14 +9,12 @@
 
   var utils = {
 
-    parseDOM: (function () {
-      var container = document.createElement('div');
+    parseDOM: function (str) {
+      var doc = document.implementation.createHTMLDocument('');
 
-      return function (str) {
-        container.innerHTML = str;
-        return container.children;
-      };
-    }()),
+      doc.body.innerHTML = str;
+      return doc.body.children;
+    },
 
     toArray: function (obj) {
       return Array.prototype.slice.call(obj);
@@ -73,14 +71,15 @@
             break;
           case (!!nodes.length):
             // element nodes found
-            utils.toArray(nodes).forEach(function (node) {
-              obj._content.push(node.cloneNode(true));
-            });
+            obj._content = utils.toArray(nodes);
             break;
           default:
             // neither
             break;
         }
+
+        query = null;
+        nodes = null;
 
         break;
       case (arg instanceof NodeList):
@@ -103,9 +102,6 @@
         // neither
         break;
     }
-
-    query = null;
-    nodes = null;
 
     obj.context = context;
     obj.length = obj._content.length;
