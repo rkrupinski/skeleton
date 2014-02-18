@@ -1,3 +1,0 @@
-describe('skeleton.js', function () {
-
-});
