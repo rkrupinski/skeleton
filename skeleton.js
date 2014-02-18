@@ -102,9 +102,17 @@
         // neither
         break;
     }
+    
+    Object.defineProperty(obj, 'length', {
+      get: function () {
+        return obj._content.length;
+      },
+      set: function (val) {
+        obj._content.length = val;
+      }
+    });
 
     obj.context = context;
-    obj.length = obj._content.length;
 
     return obj;
   }
