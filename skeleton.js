@@ -90,14 +90,13 @@
         // element node, document or window passed
         obj._content.push(arg);
         break;
-      case (proto.isPrototypeOf(arg)):
-        // wrapped
-        obj._content = arg.get();
-        break;
       case (Array.isArray(arg)):
         // array of whatever passed
         obj._content = arg;
         break;
+      case (proto.isPrototypeOf(arg)):
+        // wrapped
+        return arg;
       default:
         // neither
         break;
