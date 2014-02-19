@@ -7,17 +7,7 @@
 }(this, function () {
   'use strict';
 
-  var utils = {
-
-    toArray: function (obj) {
-      return Array.prototype.slice.call(obj);
-    },
-
-    isNaN: function (arg) {
-      return arg !== arg;
-    }
-
-  };
+  var toArray = Function.prototype.call.bind(Array.prototype.slice);
 
 
   var mixin = {
@@ -27,7 +17,7 @@
 
       doc.body.innerHTML = str;
       return doc.body.children;
-    }
+    },
 
   };
 
@@ -43,8 +33,8 @@
     },
 
     get: function (index) {
-      return typeof index === 'number' && !utils.isNaN(index) ?
-          this._content[index] : this._content;
+      return typeof index === 'undefined' ? this._content :
+        this._content[index < 0 ? this.length + index : index];
     }
 
   };
@@ -77,11 +67,11 @@
         switch (true) {
           case (!!query.length):
             // valid selector
-            obj._content = utils.toArray(query);
+            obj._content = toArray(query);
             break;
           case (!!nodes.length):
             // element nodes found
-            obj._content = utils.toArray(nodes);
+            obj._content = toArray(nodes);
             break;
           default:
             // neither
@@ -94,7 +84,7 @@
         break;
       case (arg instanceof NodeList):
         // nodelist passed
-        obj._content = utils.toArray(arg);
+        obj._content = toArray(arg);
         break;
       case (arg instanceof Element || arg === document || arg === window):
         // element node, document or window passed
