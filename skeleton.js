@@ -61,7 +61,6 @@
 
   function wrapper(arg, ctx) {
     var obj = Object.create(proto)
-      , context = ctx || document
       , query = []
       , nodes = [];
 
@@ -70,7 +69,7 @@
     switch (true) {
       case (typeof arg === 'string'):
         try {
-          query = context.querySelectorAll(arg);
+          query = (ctx || document).querySelectorAll(arg);
         } catch (e) {
           nodes = utils.parseDOM(arg);
         }
@@ -113,8 +112,6 @@
         // neither
         break;
     }
-
-    obj.context = context;
 
     return obj;
   }
