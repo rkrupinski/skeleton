@@ -7,7 +7,7 @@
 }(this, function () {
   'use strict';
 
-  var toArray = Function.prototype.call.bind(Array.prototype.slice);
+  var slice = Array.prototype.slice;
 
 
   var mixin = {
@@ -67,11 +67,11 @@
         switch (true) {
           case (!!query.length):
             // valid selector
-            obj._content = toArray(query);
+            obj._content = slice.call(query);
             break;
           case (!!nodes.length):
             // element nodes found
-            obj._content = toArray(nodes);
+            obj._content = slice.call(nodes);
             break;
           default:
             // neither
@@ -84,7 +84,7 @@
         break;
       case (arg instanceof NodeList):
         // nodelist passed
-        obj._content = toArray(arg);
+        obj._content = slice.call(arg);
         break;
       case (arg instanceof Element || arg === document || arg === window):
         // element node, document or window passed
