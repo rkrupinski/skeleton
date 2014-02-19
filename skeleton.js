@@ -34,7 +34,7 @@
 
     get: function (index) {
       return typeof index === 'undefined' ? this._content :
-        this._content[index < 0 ? this.length + index : index];
+          this._content[index < 0 ? this.length + index : index];
     }
 
   };
