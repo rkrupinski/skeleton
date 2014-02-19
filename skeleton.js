@@ -26,9 +26,11 @@
 
   };
 
+
   var mixin = {
 
   };
+
 
   var proto = {
 
@@ -46,6 +48,15 @@
     }
 
   };
+
+  Object.defineProperty(proto, 'length', {
+    get: function () {
+      return this._content.length;
+    },
+    set: function (val) {
+      this._content.length = val;
+    }
+  });
 
 
   function wrapper(arg, ctx) {
@@ -102,15 +113,6 @@
         // neither
         break;
     }
-    
-    Object.defineProperty(obj, 'length', {
-      get: function () {
-        return obj._content.length;
-      },
-      set: function (val) {
-        obj._content.length = val;
-      }
-    });
 
     obj.context = context;
 
