@@ -28,7 +28,7 @@
       $('li:nth-child(even)'),
       $('foo<span></span><div>').get(),
       $('strong', document.querySelector('.test')),
-      $(window).get(0),
+      $(window).get(-1),
       $($(document)).get()
     ].forEach(function (result) {
       console.log(result);
