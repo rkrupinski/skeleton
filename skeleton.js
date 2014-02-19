@@ -9,13 +9,6 @@
 
   var utils = {
 
-    parseDOM: function (str) {
-      var doc = document.implementation.createHTMLDocument('');
-
-      doc.body.innerHTML = str;
-      return doc.body.children;
-    },
-
     toArray: function (obj) {
       return Array.prototype.slice.call(obj);
     },
@@ -28,6 +21,13 @@
 
 
   var mixin = {
+
+    parseHTML: function (str) {
+      var doc = document.implementation.createHTMLDocument('');
+
+      doc.body.innerHTML = str;
+      return doc.body.children;
+    }
 
   };
 
@@ -71,7 +71,7 @@
         try {
           query = (ctx || document).querySelectorAll(arg);
         } catch (e) {
-          nodes = utils.parseDOM(arg);
+          nodes = wrapper.parseHTML(arg);
         }
 
         switch (true) {
