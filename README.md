@@ -22,7 +22,7 @@ var proto = {
 Example plugin implementation:
 ```js 
 $.fn.colorize = function (options) {
-  return this.each(function (index, element) {
+  return this.each(function () {
     this.style.color = options.color;
   });
 };

@@ -30,9 +30,7 @@
       $('strong', document.querySelector('.test')),
       $(window).get(-1),
       $($(document)).get()
-    ].forEach(function (result) {
-      console.log(result);
-    });
+    ].forEach(console.log.bind(console));
 
     $('li').each(function (index, element) {
       console.log(index, element, element === this);
