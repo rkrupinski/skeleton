@@ -29,7 +29,8 @@
       $('foo<span></span><div>').get(),
       $('strong', document.querySelector('.test')),
       $(window).get(-1),
-      $($(document)).get()
+      $($(document)).get(),
+      $('li').eq(2)
     ].forEach(console.log.bind(console));
 
     $('li').each(function (index, element) {

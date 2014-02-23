@@ -35,6 +35,11 @@
     get: function (index) {
       return typeof index === 'undefined' ? this._content :
           this._content[index < 0 ? this.length + index : index];
+    },
+
+    eq: function (index) {
+      return wrapper(this.get(typeof index === 'undefined' ?
+          this.length : index));
     }
 
   };
