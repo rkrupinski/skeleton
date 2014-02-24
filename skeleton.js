@@ -16,7 +16,7 @@
       var doc = document.implementation.createHTMLDocument('');
 
       doc.body.innerHTML = str;
-      return doc.body.children;
+      return slice.call(doc.body.children);
     },
 
   };
@@ -76,7 +76,7 @@
             break;
           case (!!nodes.length):
             // element nodes found
-            obj._content = slice.call(nodes);
+            obj._content = nodes;
             break;
           default:
             // neither
