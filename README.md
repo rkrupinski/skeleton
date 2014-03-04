@@ -1,7 +1,7 @@
 skeleton
 ========
 
-Proof of concept jQuery-compatible DOM library skeleton.
+Proof of concept jQuery-compatible DOM library skeleton. [See it](http://rkrupinski.github.io/skeleton/) in action.
 
 Example `.find(selector)` method implementation:
 ```js	
