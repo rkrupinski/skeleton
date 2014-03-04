@@ -10,9 +10,8 @@ var proto = {
   /* ... */
 
   find: function (selector) {
-    return wrapper(this._content.reduce(function (prev, curr) {
-      return curr instanceof Element ?
-          prev.concat(wrapper(selector, curr).get()) : prev;
+    return wrapper(this._content.reduce(function (found, node) {
+      return found.concat(wrapper(selector, node).get());
     }, []));
   }
 
