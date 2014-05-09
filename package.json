@@ -1,6 +1,6 @@
 {
   "name": "skeleton",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Proof of concept jQuery-compatible DOM library skeleton.",
   "repository": {
     "type": "git",
