@@ -96,7 +96,7 @@
         obj._content.push(arg);
         break;
       case (Array.isArray(arg)):
-        // array of whatever passed
+        // array passed
         obj._content = arg;
         break;
       case (proto.isPrototypeOf(arg)):
@@ -112,7 +112,7 @@
 
   wrapper.fn = proto;
 
-  Object.keys(mixin).forEach(function (prop) {
+  Object.getOwnPropertyNames(mixin).forEach(function (prop) {
     wrapper[prop] = mixin[prop];
   });
 
