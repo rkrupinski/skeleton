@@ -6,7 +6,8 @@ var gulp = require('gulp')
 gulp.task('jshint', function () {
   gulp.src('skeleton.js')
     .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('uglify', function() {

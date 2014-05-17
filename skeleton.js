@@ -9,7 +9,6 @@
 
   var slice = Array.prototype.slice;
 
-
   var mixin = {
 
     parseHTML: function (str) {
@@ -17,10 +16,9 @@
 
       doc.body.innerHTML = str;
       return slice.call(doc.body.children);
-    },
+    }
 
   };
-
 
   var proto = {
 
@@ -40,6 +38,12 @@
     eq: function (index) {
       return wrapper(this.get(typeof index === 'undefined' ?
           this.length : index));
+    },
+
+    find: function (selector) {
+      return wrapper(this._content.reduce(function (found, node) {
+        return found.concat(wrapper(selector, node).get());
+      }, []));
     }
 
   };
@@ -53,7 +57,6 @@
     }
   });
 
-
   function wrapper(arg, ctx) {
     var obj = Object.create(proto)
       , query = []
@@ -63,10 +66,14 @@
 
     switch (true) {
       case (typeof arg === 'string'):
+        if (proto.isPrototypeOf(ctx)) {
+          return ctx.find(arg);
+        }
+
         try {
           query = (ctx || document).querySelectorAll(arg);
         } catch (e) {
-          nodes = wrapper.parseHTML(arg);
+          !ctx && (nodes = wrapper.parseHTML(arg));
         }
 
         switch (true) {
@@ -91,7 +98,8 @@
         // nodelist passed
         obj._content = slice.call(arg);
         break;
-      case (arg instanceof Element || arg === document || arg === window):
+      case (arg instanceof Element || arg === document ||
+          arg === window):
         // element node, document or window passed
         obj._content.push(arg);
         break;
