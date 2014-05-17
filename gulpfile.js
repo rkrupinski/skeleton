@@ -1,8 +1,7 @@
 var gulp = require('gulp')
   , jshint = require('gulp-jshint')
   , uglify = require('gulp-uglify')
-  , rename = require("gulp-rename")
-  , karma = require('gulp-karma');
+  , rename = require("gulp-rename");
 
 gulp.task('jshint', function () {
   gulp.src('skeleton.js')
@@ -17,19 +16,7 @@ gulp.task('uglify', function() {
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('karma', function () {
-  gulp.src([
-    'skeleton.js',
-    'test/{,*/}*.js'
-  ])
-    .pipe(karma({
-      action: 'run',
-      configFile: 'karma.conf.js'
-    }));
-});
-
 gulp.task('default', [
   'jshint',
-  'karma',
   'uglify'
 ]);
