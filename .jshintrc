@@ -4,16 +4,12 @@
   "curly": true,
   "eqeqeq": true,
   "expr": true,
-  "latedef": true,
   "laxcomma": true,
   "newcap": true,
   "noarg": true,
+  "node": true,
   "quotmark": true,
   "undef": true,
   "unused": true,
-  "trailing": true,
-  "globals": {
-    "define": false,
-    "NodeList": false
-  }
+  "trailing": true
 }
