@@ -2,7 +2,11 @@ var gulp = require('gulp')
   , jshint = require('gulp-jshint');
 
 gulp.task('lint', function () {
-  gulp.src('./lib/**/*.js')
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
+  gulp
+      .src([
+        'index.js',
+        './lib/**/*.js'
+      ])
+      .pipe(jshint('.jshintrc'))
+      .pipe(jshint.reporter('jshint-stylish'));
 });
