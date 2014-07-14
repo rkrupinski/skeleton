@@ -6,7 +6,7 @@ Taking it further
 -----------------
 Writing a plugin:
 ```js
-var $ = require(./lib/skeleton);
+var $ = require('./lib/skeleton');
 
 $.fn.batman = function () {
   return this.each(function (element) {
