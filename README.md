@@ -9,7 +9,7 @@ Writing a plugin:
 var $ = require('./lib/skeleton');
 
 $.fn.batman = function () {
-  return this.each(function (element) {
+  return this.each(function (index, element) {
     element.innerHTML = 'BATMAN';
   });
 };
