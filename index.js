@@ -58,11 +58,7 @@ var proto = {
       [].push.apply(ret, wrapper(selector, this).get());
     });
 
-    if (ret.length > 1) {
-      ret = wrapper.unique(ret);
-    }
-
-    return wrapper(ret);
+    return wrapper(wrapper.unique(ret));
   },
 
   parent: function (selector) {
@@ -78,11 +74,25 @@ var proto = {
       parent && ret.push(parent);
     });
 
-    if (ret.length > 1) {
-      ret = wrapper.unique(ret);
-    }
+    return wrapper(wrapper.unique(ret));
+  },
 
-    return wrapper(ret);
+  parents: function (selector) {
+    var ret = [];
+
+    this.each(function () {
+      var parent = getParent(this);
+
+      while (parent && parent !== document) {
+        if (!selector || matches(parent, selector)) {
+          ret.push(parent);
+        }
+
+        parent = parent.parentNode;
+      }
+    });
+
+    return wrapper(wrapper.unique(ret));
   },
 
   get length() {
