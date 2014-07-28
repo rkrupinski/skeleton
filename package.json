@@ -8,8 +8,9 @@
   },
   "private": true,
   "dependencies": {
-    "dom-array": "0.0.1",
-    "matches-selector": "^1.0.0"
+    "dom-array": "0.0.2",
+    "matches-selector": "^1.0.0",
+    "parse-html": "0.0.1"
   },
   "devDependencies": {
     "gulp": "^3.6.2",
