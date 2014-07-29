@@ -123,6 +123,13 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
+  add: function () {
+    var merged = wrapper.apply(null, arguments).get()
+        .concat(this._content);
+
+    return wrapper.call(this, wrapper.unique(merged));
+  },
+
   get length() {
     return this._content.length;
   },
