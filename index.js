@@ -16,7 +16,13 @@ var mixin = {
   },
 
   unique: function (arr) {
-    var ret = [];
+    var ret;
+
+    if (arr.length < 2) {
+      return arr;
+    }
+
+    ret = [];
 
     for (var i = 0, l = arr.length; i < l; i++) {
       !~ret.indexOf(arr[i]) && ret.push(arr[i]);
@@ -54,7 +60,7 @@ var proto = {
   find: function (selector) {
     var ret = [];
 
-    this.each(function () {
+    selector && this.each(function () {
       [].push.apply(ret, wrapper(selector, this).get());
     });
 
@@ -62,33 +68,55 @@ var proto = {
   },
 
   parent: function (selector) {
-    var ret = [];
+    var ret = []
+      , current;
 
     this.each(function () {
-      var parent = getParent(this);
+      current = getParent(this);
 
-      if (parent && selector) {
-        parent = matches(parent, selector) ? parent : null;
+      if (current && selector) {
+        current = matches(current, selector) ? current : null;
       }
 
-      parent && ret.push(parent);
+      current && ret.push(current);
     });
 
     return wrapper(wrapper.unique(ret));
   },
 
   parents: function (selector) {
-    var ret = [];
+    var ret = []
+      , current;
 
     this.each(function () {
-      var parent = getParent(this);
+      current = getParent(this);
 
-      while (parent && parent !== document) {
-        if (!selector || matches(parent, selector)) {
-          ret.push(parent);
+      while (current && current !== document) {
+        if (!selector || matches(current, selector)) {
+          ret.push(current);
         }
 
-        parent = parent.parentNode;
+        current = current.parentNode;
+      }
+    });
+
+    return wrapper(wrapper.unique(ret));
+  },
+
+  closest: function (selector) {
+    var ret = []
+      , current;
+
+    selector && this.each(function () {
+      current = this;
+
+      while (current && current !== document) {
+        if (matches(current, selector)) {
+          ret.push(current);
+          break;
+        }
+
+        current = current.parentNode;
       }
     });
 
