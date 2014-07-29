@@ -49,8 +49,8 @@ var proto = {
   },
 
   eq: function (index) {
-    return wrapper(this.get(typeof index === 'undefined' ?
-        this.length : index));
+    return wrapper.call(this, this.get(
+        typeof index === 'undefined' ? this.length : index));
   },
 
   first: function () {
@@ -64,7 +64,7 @@ var proto = {
       [].push.apply(ret, wrapper(selector, this).get());
     });
 
-    return wrapper(wrapper.unique(ret));
+    return wrapper.call(this, wrapper.unique(ret));
   },
 
   parent: function (selector) {
@@ -81,7 +81,7 @@ var proto = {
       current && ret.push(current);
     });
 
-    return wrapper(wrapper.unique(ret));
+    return wrapper.call(this, wrapper.unique(ret));
   },
 
   parents: function (selector) {
@@ -100,7 +100,7 @@ var proto = {
       }
     });
 
-    return wrapper(wrapper.unique(ret));
+    return wrapper.call(this, wrapper.unique(ret));
   },
 
   closest: function (selector) {
@@ -120,7 +120,7 @@ var proto = {
       }
     });
 
-    return wrapper(wrapper.unique(ret));
+    return wrapper.call(this, wrapper.unique(ret));
   },
 
   get length() {
@@ -139,17 +139,18 @@ function getParent(node) {
 }
 
 function wrapper(arg, ctx) {
-  var ret;
+  /*jshint validthis:true*/
+  var obj;
 
   switch (true) {
     case (proto.isPrototypeOf(arg)):
-      ret = arg;
+      obj = arg;
       break;
     case (proto.isPrototypeOf(ctx)):
-      ret = ctx.find(arg);
+      obj = ctx.find(arg);
       break;
     default:
-      ret = Object.create(proto, {
+      obj = Object.create(proto, {
         _content: {
           value: domArray.apply(null, arguments)
         }
@@ -157,7 +158,12 @@ function wrapper(arg, ctx) {
       break;
   }
 
-  return ret;
+  Object.defineProperty(obj, '_prev', {
+    value: this,
+    writable: true
+  });
+
+  return obj;
 }
 
 Object.getOwnPropertyNames(mixin).forEach(function (prop) {
