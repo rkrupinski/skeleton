@@ -57,6 +57,25 @@ var proto = {
     return this.eq(0);
   },
 
+  filter: function (test) {
+    var ret = [];
+
+    switch (true) {
+      case (typeof test === 'function'):
+        ret = this._content.filter(function (element, index) {
+          return test.call(element, index, element);
+        });
+        break;
+      case (typeof test === 'string'):
+        ret = this._content.filter(function (element) {
+          return matches(element, test);
+        });
+        break;
+    }
+
+    return wrapper.call(this, ret);
+  },
+
   find: function (selector) {
     var ret = [];
 
@@ -130,6 +149,19 @@ var proto = {
     return wrapper.call(this, wrapper.unique(merged));
   },
 
+  addBack: function (selector) {
+    var merged;
+
+    if (!this._prev) {
+      return this;
+    }
+
+    merged = (selector ? this._prev.filter(selector) :
+        this._prev).get().concat(this._content);
+
+    return wrapper.call(this, wrapper.unique(merged));
+  },
+
   get length() {
     return this._content.length;
   },
@@ -166,7 +198,7 @@ function wrapper(arg, ctx) {
   }
 
   Object.defineProperty(obj, '_prev', {
-    value: this,
+    value: this || null,
     writable: true
   });
 
