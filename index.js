@@ -187,20 +187,20 @@ var proto = {
 };
 
 function getChildren(method, selector) {
-    var ret = []
-      , children;
+  var ret = []
+    , children;
 
-    this.each(function () {
-      children = slice.call(this[method]);
+  this.each(function () {
+    children = slice.call(this[method]);
 
-      if (selector) {
-        children = wrapper(children).filter(selector).get();
-      }
+    if (selector) {
+      children = wrapper(children).filter(selector).get();
+    }
 
-      push.apply(ret, children);
-    });
+    push.apply(ret, children);
+  });
 
-    return ret;
+  return ret;
 }
 
 function getParent(node) {
