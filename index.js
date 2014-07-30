@@ -2,7 +2,9 @@
 
 var domArray = require('dom-array')
   , parse = require('parse-html')
-  , matches = require('matches-selector');
+  , matches = require('matches-selector')
+  , push = [].push
+  , slice = [].slice;
 
 var mixin = {
 
@@ -80,7 +82,7 @@ var proto = {
     var ret = [];
 
     selector && this.each(function () {
-      [].push.apply(ret, wrapper(selector, this).get());
+      push.apply(ret, wrapper(selector, this).get());
     });
 
     return wrapper.call(this, wrapper.unique(ret));
@@ -160,6 +162,23 @@ var proto = {
         this._prev).get().concat(this._content);
 
     return wrapper.call(this, wrapper.unique(merged));
+  },
+
+  children: function (selector) {
+    var ret = []
+      , children;
+
+    this.each(function () {
+      children = slice.call(this.children);
+
+      if (selector) {
+        children = wrapper(children).filter(selector).get();
+      }
+
+      push.apply(ret, children);
+    });
+
+    return wrapper.call(this, ret);
   },
 
   get length() {
