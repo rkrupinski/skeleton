@@ -221,7 +221,7 @@ function getChildren(method, selector) {
 }
 
 function getParent(node) {
-  return wrapper.contains(document, node) ? 
+  return wrapper.contains(document.body, node) ? 
       node.parentNode : null;
 }
 
