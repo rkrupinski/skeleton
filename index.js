@@ -154,6 +154,10 @@ var proto = {
     return this.eq(0);
   },
 
+  last: function () {
+    return this.eq(this.length - 1);
+  },
+
   parent: function (selector) {
     var ret = []
       , current;
