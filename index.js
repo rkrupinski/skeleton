@@ -165,20 +165,15 @@ var proto = {
   },
 
   children: function (selector) {
-    var ret = []
-      , children;
+    var children = getChildren.call(this, 'children', selector);
 
-    this.each(function () {
-      children = slice.call(this.children);
+    return wrapper.call(this, children);
+  },
 
-      if (selector) {
-        children = wrapper(children).filter(selector).get();
-      }
+  contents: function () {
+    var contents = getChildren.call(this, 'childNodes');
 
-      push.apply(ret, children);
-    });
-
-    return wrapper.call(this, ret);
+    return wrapper.call(this, contents);
   },
 
   get length() {
@@ -190,6 +185,23 @@ var proto = {
   }
 
 };
+
+function getChildren(method, selector) {
+    var ret = []
+      , children;
+
+    this.each(function () {
+      children = slice.call(this[method]);
+
+      if (selector) {
+        children = wrapper(children).filter(selector).get();
+      }
+
+      push.apply(ret, children);
+    });
+
+    return ret;
+}
 
 function getParent(node) {
   return wrapper.contains(document, node) ? 
