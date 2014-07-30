@@ -37,6 +37,67 @@ var mixin = {
 
 var proto = {
 
+  /* Miscellaneous */
+
+  get: function (index) {
+    return typeof index === 'undefined' ? this._content :
+        this._content[index < 0 ? this.length + index : index];
+  },
+
+  /* Traversing */
+
+  add: function () {
+    var merged = this._content.concat(
+      wrapper.apply(null, arguments).get());
+
+    return wrapper.call(this, wrapper.unique(merged));
+  },
+
+  addBack: function (selector) {
+    var merged;
+
+    if (!this._prev) {
+      return this;
+    }
+
+    merged = this._content.concat((selector ?
+        this._prev.filter(selector) : this._prev).get()); 
+
+    return wrapper.call(this, wrapper.unique(merged));
+  },
+
+  children: function (selector) {
+    var children = getChildren.call(this, 'children', selector);
+
+    return wrapper.call(this, children);
+  },
+
+  closest: function (selector) {
+    var ret = []
+      , current;
+
+    selector && this.each(function () {
+      current = this;
+
+      while (current && current !== document) {
+        if (matches(current, selector)) {
+          ret.push(current);
+          break;
+        }
+
+        current = current.parentNode;
+      }
+    });
+
+    return wrapper.call(this, wrapper.unique(ret));
+  },
+
+  contents: function () {
+    var contents = getChildren.call(this, 'childNodes');
+
+    return wrapper.call(this, contents);
+  },
+
   each: function (fn) {
     this._content.forEach(function (element, index) {
       fn.call(element, index, element);
@@ -45,18 +106,19 @@ var proto = {
     return this;
   },
 
-  get: function (index) {
-    return typeof index === 'undefined' ? this._content :
-        this._content[index < 0 ? this.length + index : index];
+  end: function () {
+    var ret = this;
+
+    while (ret._prev) {
+      ret = ret._prev;
+    }
+
+    return ret;
   },
 
   eq: function (index) {
     return wrapper.call(this, this.get(
         typeof index === 'undefined' ? this.length : index));
-  },
-
-  first: function () {
-    return this.eq(0);
   },
 
   filter: function (test) {
@@ -86,6 +148,10 @@ var proto = {
     });
 
     return wrapper.call(this, wrapper.unique(ret));
+  },
+
+  first: function () {
+    return this.eq(0);
   },
 
   parent: function (selector) {
@@ -124,67 +190,7 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
-  closest: function (selector) {
-    var ret = []
-      , current;
-
-    selector && this.each(function () {
-      current = this;
-
-      while (current && current !== document) {
-        if (matches(current, selector)) {
-          ret.push(current);
-          break;
-        }
-
-        current = current.parentNode;
-      }
-    });
-
-    return wrapper.call(this, wrapper.unique(ret));
-  },
-
-  add: function () {
-    var merged = this._content.concat(
-      wrapper.apply(null, arguments).get());
-
-    return wrapper.call(this, wrapper.unique(merged));
-  },
-
-  addBack: function (selector) {
-    var merged;
-
-    if (!this._prev) {
-      return this;
-    }
-
-    merged = this._content.concat((selector ?
-        this._prev.filter(selector) : this._prev).get()); 
-
-    return wrapper.call(this, wrapper.unique(merged));
-  },
-
-  children: function (selector) {
-    var children = getChildren.call(this, 'children', selector);
-
-    return wrapper.call(this, children);
-  },
-
-  contents: function () {
-    var contents = getChildren.call(this, 'childNodes');
-
-    return wrapper.call(this, contents);
-  },
-
-  end: function () {
-    var ret = this;
-
-    while (ret._prev) {
-      ret = ret._prev;
-    }
-
-    return ret;
-  },
+  /* Properties */
 
   get length() {
     return this._content.length;
