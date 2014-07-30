@@ -145,8 +145,8 @@ var proto = {
   },
 
   add: function () {
-    var merged = wrapper.apply(null, arguments).get()
-        .concat(this._content);
+    var merged = this._content.concat(
+      wrapper.apply(null, arguments).get());
 
     return wrapper.call(this, wrapper.unique(merged));
   },
@@ -158,8 +158,8 @@ var proto = {
       return this;
     }
 
-    merged = (selector ? this._prev.filter(selector) :
-        this._prev).get().concat(this._content);
+    merged = this._content.concat((selector ?
+        this._prev.filter(selector) : this._prev).get()); 
 
     return wrapper.call(this, wrapper.unique(merged));
   },
