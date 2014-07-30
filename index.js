@@ -176,6 +176,16 @@ var proto = {
     return wrapper.call(this, contents);
   },
 
+  end: function () {
+    var ret = this;
+
+    while (ret._prev) {
+      ret = ret._prev;
+    }
+
+    return ret;
+  },
+
   get length() {
     return this._content.length;
   },
@@ -187,6 +197,7 @@ var proto = {
 };
 
 function getChildren(method, selector) {
+  /*jshint validthis:true*/
   var ret = []
     , children;
 
