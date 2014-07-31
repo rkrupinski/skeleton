@@ -242,14 +242,12 @@ var proto = {
       , current;
 
     this.each(function () {
-      current = getParent(this);
+      current = this;
 
-      while (current && current !== document) {
-        if (!selector || matches(current, selector)) {
-          ret.push(current);
-        }
-
-        current = current.parentNode;
+      while ((current = getParent(current)) &&
+          current !== document) {
+        (!selector || matches(current, selector)) &&
+            ret.push(current);
       }
     });
 
