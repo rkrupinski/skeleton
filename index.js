@@ -176,6 +176,23 @@ var proto = {
     return wrapper.call(this, ret);
   },
 
+  next: function (selector) {
+    var ret = []
+      , current;
+
+    this.each(function () {
+      current = this.nextElementSibling;
+
+      if (current && selector) {
+        current = matches(current, selector) ? current : null;
+      }
+
+      current && ret.push(current);
+    });
+
+    return wrapper.call(this, ret);
+  },
+
   offsetParent: function () {
     var ret = []
       , current;
