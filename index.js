@@ -160,6 +160,10 @@ var proto = {
     });
   },
 
+  is: function (test) {
+    return !!this.filter(test).length;
+  },
+
   last: function () {
     return this.eq(this.length - 1);
   },
