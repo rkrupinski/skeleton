@@ -168,6 +168,14 @@ var proto = {
     return this.eq(this.length - 1);
   },
 
+  map: function (fn) {
+    var ret = this._content.map(function (element, index) {
+      return fn.call(element, index, element);
+    });
+
+    return wrapper.call(this, ret);
+  },
+
   offsetParent: function () {
     var ret = []
       , current;
