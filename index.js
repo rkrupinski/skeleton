@@ -193,6 +193,22 @@ var proto = {
     return wrapper.call(this, ret);
   },
 
+  nextAll: function (selector) {
+    var ret = []
+      , current;
+
+    this.each(function () {
+      current = this;
+
+      while (current = current.nextElementSibling) {
+        (!selector || matches(current, selector)) &&
+            ret.push(current);
+      }
+    });
+
+    return wrapper.call(this, wrapper.unique(ret));
+  },
+
   offsetParent: function () {
     var ret = []
       , current;
