@@ -154,6 +154,12 @@ var proto = {
     return this.eq(0);
   },
 
+  has: function (selector) {
+    return this.filter(function () {
+      return !!wrapper(selector, this).length;
+    });
+  },
+
   last: function () {
     return this.eq(this.length - 1);
   },
