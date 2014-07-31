@@ -158,6 +158,17 @@ var proto = {
     return this.eq(this.length - 1);
   },
 
+  offsetParent: function () {
+    var ret = []
+      , current;
+
+    this.each(function () {
+      (current = this.offsetParent) && ret.push(current);
+    });
+
+    return wrapper.call(this, wrapper.unique(ret));
+  },
+
   parent: function (selector) {
     var ret = []
       , current;
@@ -225,8 +236,9 @@ function getChildren(method, selector) {
 }
 
 function getParent(node) {
-  return wrapper.contains(document.body, node) ? 
-      node.parentNode : null;
+  var parent = node.parentNode;
+
+  return parent && parent.nodeType !== 11 ? parent : null; 
 }
 
 function wrapper(arg, ctx) {
