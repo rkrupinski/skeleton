@@ -209,6 +209,29 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
+  nextUntil: function (selector, filter) {
+    var ret
+      , current;
+
+    if (!selector) {
+      return this.nextAll();
+    }
+
+    ret = [];
+
+    this.each(function () {
+      current = this;
+
+      while((current = current.nextElementSibling) &&
+          !matches(current, selector)) {
+        (!filter || matches(current, filter)) &&
+            ret.push(current);
+      }
+    });
+
+    return wrapper.call(this, ret);
+  },
+
   offsetParent: function () {
     var ret = []
       , current;
