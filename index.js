@@ -229,7 +229,7 @@ var proto = {
       }
     });
 
-    return wrapper.call(this, ret);
+    return wrapper.call(this, wrapper.unique(ret));
   },
 
   offsetParent: function () {
