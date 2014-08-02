@@ -122,20 +122,26 @@ var proto = {
   },
 
   filter: function (test) {
-    var ret = [];
+    var ret
+      , cb;
 
     switch (true) {
       case (typeof test === 'function'):
-        ret = this._content.filter(function (element, index) {
+        cb = function (element, index) {
           return test.call(element, index, element);
-        });
+        };
         break;
       case (typeof test === 'string'):
-        ret = this._content.filter(function (element) {
+        cb = function (element) {
           return matches(element, test);
-        });
+        };
+        break;
+      default:
+        cb = noop;
         break;
     }
+
+    ret = this._content.filter(cb);
 
     return wrapper.call(this, ret);
   },
@@ -177,18 +183,11 @@ var proto = {
   },
 
   next: function (selector) {
-    var ret = []
-      , current;
+    var ret = walkTheDOM.call(this, function (current) {
+      return current.nextElementSibling;
+    }, true);
 
-    this.each(function () {
-      current = this.nextElementSibling;
-
-      if (current && selector) {
-        current = matches(current, selector) ? current : null;
-      }
-
-      current && ret.push(current);
-    });
+    selector && (ret = filterNodes(ret, selector));
 
     return wrapper.call(this, ret);
   },
@@ -196,7 +195,9 @@ var proto = {
   nextAll: function (selector) {
     var ret = walkTheDOM.call(this, function (current) {
       return current.nextElementSibling;
-    }, selector);
+    });
+
+    selector && (ret = filterNodes(ret, selector));
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -211,35 +212,27 @@ var proto = {
     ret = walkTheDOM.call(this, function (current) {
       return (current = current.nextElementSibling) &&
           !matches(current, selector) ? current : null;
-    }, filter);
+    });
+
+    filter && (ret = filterNodes(ret, filter));
 
     return wrapper.call(this, wrapper.unique(ret));
   },
 
   offsetParent: function () {
-    var ret = []
-      , current;
-
-    this.each(function () {
-      (current = this.offsetParent) && ret.push(current);
-    });
+    var ret = walkTheDOM.call(this, function (current) {
+      return (current = current.offsetParent) ? current : null;
+    }, true);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
 
   parent: function (selector) {
-    var ret = []
-      , current;
+    var ret = walkTheDOM.call(this, function (current) {
+      return getParent(current);
+    }, true);
 
-    this.each(function () {
-      current = getParent(this);
-
-      if (current && selector) {
-        current = matches(current, selector) ? current : null;
-      }
-
-      current && ret.push(current);
-    });
+    selector && (ret = filterNodes(ret, selector));
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -247,8 +240,10 @@ var proto = {
   parents: function (selector) {
     var ret = walkTheDOM.call(this, function (current) {
       return (current = getParent(current)) &&
-          current !== document ? current : null;
-    }, selector);
+          current.nodeType !== 9 ? current : null;
+    });
+
+    selector && (ret = filterNodes(ret, selector));
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -265,7 +260,13 @@ var proto = {
 
 };
 
-function walkTheDOM(cb, filter) {
+function noop() {}
+
+function filterNodes(arr, test) {
+  return wrapper(arr).filter(test).get();
+}
+
+function walkTheDOM(cb, once) {
   /*jshint validthis:true*/
   var ret = []
     , current;
@@ -274,8 +275,10 @@ function walkTheDOM(cb, filter) {
     current = this;
 
     while (current = cb(current)) {
-      if (!filter || matches(current, filter)) {
-        ret.push(current);
+      ret.push(current);
+
+      if (once) {
+        break;
       }
     }
   });
