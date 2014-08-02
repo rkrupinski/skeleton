@@ -85,7 +85,7 @@ var proto = {
           break;
         }
 
-        current = current.parentNode;
+        current = getParent(current);
       }
     });
 
@@ -194,40 +194,24 @@ var proto = {
   },
 
   nextAll: function (selector) {
-    var ret = []
-      , current;
-
-    this.each(function () {
-      current = this;
-
-      while (current = current.nextElementSibling) {
-        (!selector || matches(current, selector)) &&
-            ret.push(current);
-      }
-    });
+    var ret = walkTheDOM.call(this, function (current) {
+      return current.nextElementSibling;
+    }, selector);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
 
   nextUntil: function (selector, filter) {
-    var ret
-      , current;
+    var ret;
 
     if (!selector) {
       return this.nextAll();
     }
 
-    ret = [];
-
-    this.each(function () {
-      current = this;
-
-      while((current = current.nextElementSibling) &&
-          !matches(current, selector)) {
-        (!filter || matches(current, filter)) &&
-            ret.push(current);
-      }
-    });
+    ret = walkTheDOM.call(this, function (current) {
+      return (current = current.nextElementSibling) &&
+          !matches(current, selector) ? current : null;
+    }, filter);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -261,18 +245,10 @@ var proto = {
   },
 
   parents: function (selector) {
-    var ret = []
-      , current;
-
-    this.each(function () {
-      current = this;
-
-      while ((current = getParent(current)) &&
-          current !== document) {
-        (!selector || matches(current, selector)) &&
-            ret.push(current);
-      }
-    });
+    var ret = walkTheDOM.call(this, function (current) {
+      return (current = getParent(current)) &&
+          current !== document ? current : null;
+    }, selector);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -288,6 +264,24 @@ var proto = {
   }
 
 };
+
+function walkTheDOM(cb, filter) {
+  /*jshint validthis:true*/
+  var ret = []
+    , current;
+
+  this.each(function () {
+    current = this;
+
+    while (current = cb(current)) {
+      if (!filter || matches(current, filter)) {
+        ret.push(current);
+      }
+    }
+  });
+
+  return ret;
+}
 
 function getChildren(method, selector) {
   /*jshint validthis:true*/
