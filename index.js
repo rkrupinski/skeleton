@@ -149,9 +149,11 @@ var proto = {
   find: function (selector) {
     var ret = [];
 
-    selector && this.each(function () {
-      push.apply(ret, wrapper(selector, this).get());
-    });
+    if (selector) {
+      ret = walkTheDOM.call(this, function (current) {
+        return wrapper(selector, current).get();
+      }, true);
+    }
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -187,7 +189,7 @@ var proto = {
       return current.nextElementSibling;
     }, true);
 
-    selector && (ret = filterNodes(ret, selector));
+    ret = filterNodes(ret, selector);
 
     return wrapper.call(this, ret);
   },
@@ -197,7 +199,7 @@ var proto = {
       return current.nextElementSibling;
     });
 
-    selector && (ret = filterNodes(ret, selector));
+    ret = filterNodes(ret, selector);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -214,7 +216,7 @@ var proto = {
           !matches(current, selector) ? current : null;
     });
 
-    filter && (ret = filterNodes(ret, filter));
+    ret = filterNodes(ret, filter);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -232,7 +234,7 @@ var proto = {
       return getParent(current);
     }, true);
 
-    selector && (ret = filterNodes(ret, selector));
+    ret = filterNodes(ret, selector);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -243,7 +245,7 @@ var proto = {
           current.nodeType !== 9 ? current : null;
     });
 
-    selector && (ret = filterNodes(ret, selector));
+    ret = filterNodes(ret, selector);
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -263,7 +265,7 @@ var proto = {
 function noop() {}
 
 function filterNodes(arr, test) {
-  return wrapper(arr).filter(test).get();
+  return test ? wrapper(arr).filter(test).get() : arr;
 }
 
 function walkTheDOM(cb, once) {
@@ -275,7 +277,8 @@ function walkTheDOM(cb, once) {
     current = this;
 
     while (current = cb(current)) {
-      ret.push(current);
+      Array.isArray(current) ? push.apply(ret, current) :
+          ret.push(current);
 
       if (once) {
         break;
@@ -286,20 +289,13 @@ function walkTheDOM(cb, once) {
   return ret;
 }
 
-function getChildren(method, selector) {
+function getChildren(mode, selector) {
   /*jshint validthis:true*/
-  var ret = []
-    , children;
+  var ret = walkTheDOM.call(this, function (current) {
+    return slice.call(current[mode]);
+  }, true);
 
-  this.each(function () {
-    children = slice.call(this[method]);
-
-    if (selector) {
-      children = wrapper(children).filter(selector).get();
-    }
-
-    push.apply(ret, children);
-  });
+  ret = filterNodes(ret, selector);
 
   return ret;
 }
