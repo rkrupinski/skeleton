@@ -121,23 +121,29 @@ var proto = {
         typeof index === 'undefined' ? this.length : index));
   },
 
-  filter: function (test) {
+  filter: function (test, inverse) {
     var ret
       , cb;
 
     switch (true) {
       case (typeof test === 'function'):
         cb = function (element, index) {
-          return test.call(element, index, element);
+          var ret = test.call(element, index, element);
+
+          return inverse ? !ret : ret;
         };
         break;
       case (typeof test === 'string'):
         cb = function (element) {
-          return matches(element, test);
+          var ret = matches(element, test);
+
+          return inverse ? !ret : ret;
         };
         break;
       default:
-        cb = noop;
+        cb = function () {
+          return !!inverse;
+        };
         break;
     }
 
@@ -215,6 +221,10 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
+  not: function (test) {
+    return this.filter(test, true);
+  },
+
   offsetParent: function () {
     var ret = walkTheDOM.call(this, function (current) {
       return (current = current.offsetParent) ? current : null;
@@ -251,8 +261,6 @@ var proto = {
   }
 
 };
-
-function noop() {}
 
 function filterNodes(arr, test) {
   return test ? wrapper(arr).filter(test).get() : arr;
