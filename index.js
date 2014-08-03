@@ -79,7 +79,7 @@ var proto = {
     selector && this.each(function () {
       current = this;
 
-      while (current && current !== document) {
+      while (current && current.nodeType !== 9) {
         if (matches(current, selector)) {
           ret.push(current);
           break;
@@ -152,7 +152,7 @@ var proto = {
     if (selector) {
       ret = walkTheDOM.call(this, function (current) {
         return wrapper(selector, current).get();
-      }, true);
+      }, { once: true });
     }
 
     return wrapper.call(this, wrapper.unique(ret));
@@ -187,9 +187,7 @@ var proto = {
   next: function (selector) {
     var ret = walkTheDOM.call(this, function (current) {
       return current.nextElementSibling;
-    }, true);
-
-    ret = filterNodes(ret, selector);
+    }, { once: true, filter: selector });
 
     return wrapper.call(this, ret);
   },
@@ -197,9 +195,7 @@ var proto = {
   nextAll: function (selector) {
     var ret = walkTheDOM.call(this, function (current) {
       return current.nextElementSibling;
-    });
-
-    ret = filterNodes(ret, selector);
+    }, { filter: selector });
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -214,9 +210,7 @@ var proto = {
     ret = walkTheDOM.call(this, function (current) {
       return (current = current.nextElementSibling) &&
           !matches(current, selector) ? current : null;
-    });
-
-    ret = filterNodes(ret, filter);
+    }, { filter: filter });
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -224,7 +218,7 @@ var proto = {
   offsetParent: function () {
     var ret = walkTheDOM.call(this, function (current) {
       return (current = current.offsetParent) ? current : null;
-    }, true);
+    }, { once: true });
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -232,9 +226,7 @@ var proto = {
   parent: function (selector) {
     var ret = walkTheDOM.call(this, function (current) {
       return getParent(current);
-    }, true);
-
-    ret = filterNodes(ret, selector);
+    }, { once: true, filter: selector });
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -243,9 +235,7 @@ var proto = {
     var ret = walkTheDOM.call(this, function (current) {
       return (current = getParent(current)) &&
           current.nodeType !== 9 ? current : null;
-    });
-
-    ret = filterNodes(ret, selector);
+    }, { filter: selector });
 
     return wrapper.call(this, wrapper.unique(ret));
   },
@@ -268,9 +258,10 @@ function filterNodes(arr, test) {
   return test ? wrapper(arr).filter(test).get() : arr;
 }
 
-function walkTheDOM(cb, once) {
+function walkTheDOM(cb, options) {
   /*jshint validthis:true*/
-  var ret = []
+  var o = options || {}
+    , ret = []
     , current;
 
   this.each(function () {
@@ -280,11 +271,13 @@ function walkTheDOM(cb, once) {
       Array.isArray(current) ? push.apply(ret, current) :
           ret.push(current);
 
-      if (once) {
+      if (o.once) {
         break;
       }
     }
   });
+
+  ret = filterNodes(ret, o.filter);
 
   return ret;
 }
@@ -293,7 +286,7 @@ function getChildren(mode, selector) {
   /*jshint validthis:true*/
   var ret = walkTheDOM.call(this, function (current) {
     return slice.call(current[mode]);
-  }, true);
+  }, { once: true });
 
   ret = filterNodes(ret, selector);
 
