@@ -250,6 +250,22 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
+  parentsUntil: function (selector, filter) {
+    var ret;
+
+    if (!selector) {
+      return this.parents();
+    }
+
+    ret = walkTheDOM.call(this, function (current) {
+      return (current = getParent(current)) &&
+        current.nodeType !== 9 && !matches(current, selector) ?
+        current : null;
+    }, { filter: filter });
+
+    return wrapper.call(this, wrapper.unique(ret));
+  },
+
   /* Properties */
 
   get length() {
