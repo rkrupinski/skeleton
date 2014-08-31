@@ -266,6 +266,14 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
+  prev: function (selector) {
+    var ret = walkTheDOM.call(this, function (current) {
+      return current.previousElementSibling;
+    }, { once: true, filter: selector });
+
+    return wrapper.call(this, ret);
+  },
+
   /* Properties */
 
   get length() {
