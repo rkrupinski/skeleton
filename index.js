@@ -282,6 +282,21 @@ var proto = {
     return wrapper.call(this, wrapper.unique(ret));
   },
 
+  prevUntil: function (selector, filter) {
+    var ret;
+
+    if (!selector) {
+      return this.prevAll();
+    }
+
+    ret = walkTheDOM.call(this, function (current) {
+      return (current = current.previousElementSibling) &&
+          !matches(current, selector) ? current : null;
+    }, { filter: filter });
+
+    return wrapper.call(this, wrapper.unique(ret));
+  },
+
   /* Properties */
 
   get length() {
